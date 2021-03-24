@@ -74,8 +74,8 @@ There are two things you can do about this warning:
     (apply orig-fn beg end type ?_ args))
   (advice-add 'evil-delete-char :around 'my-advice-evil-delete-char)
   :config
-  (progn (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
-	 (define-key evil-visual-state-map (kbd "<tab>") 'indent-for-tab-command)
+  (progn ;;(define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
+	 ;;(define-key evil-visual-state-map (kbd "<tab>") 'indent-for-tab-command)
 	 (evil-mode)))
 
 (defun yes-or-no-p->-y-or-n-p (orig-fun &rest r)
