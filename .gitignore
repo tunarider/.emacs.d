@@ -1,0 +1,9 @@
+.cache/
+elpa/
+flycheck_init.el
+projectile-bookmarks.eld
+auto-save-list/
+projectile.cache
+tramp
+transient/
+eshell/
