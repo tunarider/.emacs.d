@@ -18,10 +18,12 @@ There are two things you can do about this warning:
  '(custom-safe-themes
    '("8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" default))
  '(indent-tabs-mode nil)
+ '(lsp-go-env
+   #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data ()))
  '(mac-command-modifier 'super)
  '(mac-option-modifier 'meta)
  '(package-selected-packages
-   '(solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(flycheck-popup-tip solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -56,13 +58,13 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-'") 'xref-find-definitions)
 (global-set-key (kbd "C-\"") 'xref-find-references)
 
-(setenv "PATH" (concat (getenv "HOME") "/go/bin:"
-		       (getenv "HOME") "/.cargo/bin:"
-		       "/usr/local/bin:"
-		       (getenv "PATH")))
 (setenv "WORKON_HOME" (concat (getenv "HOME") "/.venv"))
 (setenv "GOPATH" (concat (getenv "HOME") "/.go"))
 (setenv "DYLD_LIBRARY_PATH" (concat (getenv "DYLD_LIBRARY_PATH")))
+(setenv "PATH" (concat (getenv "GOPATH") "/bin:"
+		       (getenv "HOME") "/.cargo/bin:"
+		       "/usr/local/bin:"
+		       (getenv "PATH")))
 
 (use-package evil
   :ensure t
@@ -89,7 +91,7 @@ There are two things you can do about this warning:
 
 (use-package hl-line
   :config
-  (hl-line-mode))
+  (global-hl-line-mode))
 
 (use-package tramp
   :config
@@ -220,12 +222,17 @@ There are two things you can do about this warning:
   (progn  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 	  (setq flycheck-emacs-lisp-load-path 'inherit)))
 
+(use-package flycheck-popup-tip
+  :ensure t
+  :after flycheck
+  :hook
+  ((flycheck-mode . flycheck-popup-tip-mode)))
+
 (use-package centaur-tabs
   :ensure t
   :demand
   :config
   (setq centaur-tabs-set-icons t)
-  (setq centaur-tabs-height 32)
   (setq centaur-tabs-set-bar 'left)
   (setq centaur-tabs-gray-out-icons 'buffer)
   (centaur-tabs-mode t)
@@ -397,6 +404,10 @@ There are two things you can do about this warning:
    (vue-mode . lsp)
    (typescript-mode . lsp)
    (go-mode . lsp))
+  :defines
+  lsp-go-gopls-server-path
+  :config
+  (setq lsp-go-gopls-server-path (concat (getenv "GOPATH") "/bin/gopls"))
   :commands lsp)
 
 (use-package lsp-ui
