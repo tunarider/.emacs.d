@@ -31,7 +31,7 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 100 :width normal))))
+ '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 110 :width normal))))
  '(flycheck-error ((t (:background "dark red" :underline t))))
  '(rainbow-delimiters-depth-1-face ((t (:foreground "red4" :weight bold))))
  '(rainbow-delimiters-depth-2-face ((t (:foreground "DarkOrange4" :weight bold))))
@@ -74,9 +74,7 @@ There are two things you can do about this warning:
     (apply orig-fn beg end type ?_ args))
   (advice-add 'evil-delete-char :around 'my-advice-evil-delete-char)
   :config
-  (progn ;;(define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
-	 ;;(define-key evil-visual-state-map (kbd "<tab>") 'indent-for-tab-command)
-	 (evil-mode)))
+  (evil-mode))
 
 (defun yes-or-no-p->-y-or-n-p (orig-fun &rest r)
   (cl-letf (((symbol-function 'yes-or-no-p) #'y-or-n-p))
@@ -232,9 +230,15 @@ There are two things you can do about this warning:
   :ensure t
   :demand
   :config
+  (setq centaur-tabs-height 32)
   (setq centaur-tabs-set-icons t)
-  (setq centaur-tabs-set-bar 'left)
+  (setq centaur-tabs-set-bar nil)
+  (setq x-underline-at-descent-line t)
   (setq centaur-tabs-gray-out-icons 'buffer)
+  (setq centaur-tabs-style "wave")
+  (setq centaur-tabs-set-close-button nil)
+  (setq centaur-tabs-set-modified-marker t)
+  (setq centaur-tabs-modified-marker "+")
   (centaur-tabs-mode t)
   :bind
   ("M-s-y" . centaur-tabs-backward)
@@ -406,7 +410,9 @@ There are two things you can do about this warning:
    (go-mode . lsp))
   :defines
   lsp-go-gopls-server-path
+  lsp-ui-peek-always-show
   :config
+  (setq lsp-ui-peek-always-show t)
   (setq lsp-go-gopls-server-path (concat (getenv "GOPATH") "/bin/gopls"))
   :commands lsp)
 
