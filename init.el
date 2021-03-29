@@ -23,7 +23,7 @@ There are two things you can do about this warning:
  '(mac-command-modifier 'super)
  '(mac-option-modifier 'meta)
  '(package-selected-packages
-   '(flycheck-popup-tip solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(virtualenvwrapper flycheck-popup-tip solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -220,11 +220,11 @@ There are two things you can do about this warning:
   (progn  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 	  (setq flycheck-emacs-lisp-load-path 'inherit)))
 
-(use-package flycheck-popup-tip
-  :ensure t
-  :after flycheck
-  :hook
-  ((flycheck-mode . flycheck-popup-tip-mode)))
+;; (use-package flycheck-popup-tip
+;;   :ensure t
+;;   :after flycheck
+;;   :hook
+;;   ((flycheck-mode . flycheck-popup-tip-mode)))
 
 (use-package centaur-tabs
   :ensure t
@@ -393,13 +393,6 @@ There are two things you can do about this warning:
   :config
   (setq typescript-indent-level 2))
 
-(use-package lsp-python-ms
-  :ensure t
-  :init
-  :hook (python-mode . (lambda ()
-			 (require 'lsp-python-ms)
-			 (lsp))))
-
 (use-package lsp-mode
   :ensure t
   :hook
@@ -407,6 +400,7 @@ There are two things you can do about this warning:
    (rust-mode . lsp)
    (vue-mode . lsp)
    (typescript-mode . lsp)
+   (python-mode . lsp)
    (go-mode . lsp))
   :defines
   lsp-go-gopls-server-path
@@ -467,3 +461,8 @@ There are two things you can do about this warning:
   :config
   (setq solaire-mode-auto-swap-bg nil)
   (solaire-global-mode +1))
+
+(use-package virtualenvwrapper
+  :ensure t
+  :config
+  (setq venv-location (getenv "WORKON_HOME")))
