@@ -409,6 +409,7 @@ There are two things you can do about this warning:
   lsp-ui-peek-always-show
   :config
   (setq lsp-ui-peek-always-show t)
+  (setq lsp-python-ms-python-executable-cmd "python3")
   (setq lsp-go-gopls-server-path (concat (getenv "GOPATH") "/bin/gopls"))
   :commands lsp)
 
