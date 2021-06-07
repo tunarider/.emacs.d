@@ -48,6 +48,7 @@ There are two things you can do about this warning:
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
+(set-default 'tab-width 4)
 (set-default 'truncate-lines t)
 
 (global-set-key (kbd "M-s-h") 'windmove-left)
