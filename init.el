@@ -448,7 +448,9 @@ There are two things you can do about this warning:
   (diminish 'eldoc-mode))
 
 (use-package terraform-mode
-  :ensure t)
+  :ensure t
+  :hook
+  ((terraform-mode . terraform-format-on-save-mode)))
 
 (use-package dockerfile-mode
   :ensure t)
@@ -474,4 +476,4 @@ There are two things you can do about this warning:
 (use-package golden-ratio
   :ensure t
   :config
-  (golden-ratio-mode 1))
+  (golden-ratio-mode 0))
