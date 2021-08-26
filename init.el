@@ -477,3 +477,6 @@ There are two things you can do about this warning:
   :ensure t
   :config
   (golden-ratio-mode 0))
+
+(use-package pinentry
+  :ensure t)
