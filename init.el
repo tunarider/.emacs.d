@@ -23,7 +23,7 @@ There are two things you can do about this warning:
  '(mac-command-modifier 'super)
  '(mac-option-modifier 'meta)
  '(package-selected-packages
-   '(pinentry golden-ratio virtualenvwrapper flycheck-popup-tip solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(vterm-toggle vterm pinentry golden-ratio virtualenvwrapper flycheck-popup-tip solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -63,11 +63,12 @@ There are two things you can do about this warning:
 (setenv "GOPATH" (concat (getenv "HOME") "/.go"))
 (setenv "DYLD_LIBRARY_PATH" (concat (getenv "DYLD_LIBRARY_PATH")))
 (setenv "PATH" (concat
-                (getenv "HOME") "/.nvm/versions/node/v12.20.0/bin"
+                (getenv "HOME") "/.nvm/versions/node/v12.20.0/bin:"
                 (getenv "GOPATH") "/bin:"
-		(getenv "HOME") "/.cargo/bin:"
-		"/usr/local/bin:"
-		(getenv "PATH")))
+		        (getenv "HOME") "/.cargo/bin:"
+		        "/usr/local/bin:"
+                "/opt/homebrew/bin/:"
+		        (getenv "PATH")))
 
 (use-package evil
   :ensure t
@@ -91,8 +92,8 @@ There are two things you can do about this warning:
   (window-divider-mode))
 
 (use-package hl-line
-  :config
-  (global-hl-line-mode))
+  :hook
+  (prog-mode . hl-line-mode))
 
 (use-package tramp
   :config
@@ -229,10 +230,27 @@ There are two things you can do about this warning:
 ;;   :hook
 ;;   ((flycheck-mode . flycheck-popup-tip-mode)))
 
+(defun my-centaur-tab-buffer-groups ()
+  (list (cond ((derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode)
+               "Term")
+              ((string-match-p (rx (or
+                                    "\*Helm"
+                                    "\*helm"
+                                    "\*tramp"
+                                    "\*Completions\*"
+                                    "\*sdcv\*"
+                                    "\*Messages\*"
+                                    "\*Ido Completions\*")) (buffer-name))
+               "Emacs")
+              ((projectile-project-p)
+               (projectile-project-name))
+              (t "Common"))))
+
 (use-package centaur-tabs
   :ensure t
   :demand
   :config
+  (centaur-tabs-group-by-projectile-project)
   (setq centaur-tabs-height 32)
   (setq centaur-tabs-set-icons t)
   (setq centaur-tabs-set-bar nil)
@@ -242,6 +260,7 @@ There are two things you can do about this warning:
   (setq centaur-tabs-set-close-button nil)
   (setq centaur-tabs-set-modified-marker t)
   (setq centaur-tabs-modified-marker "+")
+  (setq centaur-tabs-buffer-groups-function 'my-centaur-tab-buffer-groups)
   (centaur-tabs-mode t)
   :bind
   ("M-s-y" . centaur-tabs-backward)
@@ -480,3 +499,32 @@ There are two things you can do about this warning:
 
 (use-package pinentry
   :ensure t)
+
+(use-package vterm
+  :ensure t
+  :bind (:map vterm-mode-map ("C-c C-y" . vterm-yank))
+  :config
+  (setq vterm-max-scrollback 100000))
+
+(defun my-term-mode-p(&optional args)
+  (derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode))
+
+(use-package vterm-toggle
+  :ensure t
+  :bind
+  ((:map global-map
+         ("C-c v t" . vterm-toggle)
+         ("C-c v e" . vterm-toggle-cd)))
+  :config
+  (setq vterm-toggle--vterm-buffer-p-function 'vmacs-term-mode-p)
+  (setq vterm-toggle-fullscreen-p nil)
+  (setq vterm-toggle-scope 'project)
+  (add-to-list 'display-buffer-alist
+             '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                (display-buffer-reuse-window display-buffer-at-bottom)
+                ;;(display-buffer-reuse-window display-buffer-in-direction)
+                ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                (direction . bottom)
+                ;;(dedicated . t) ;dedicated is supported in emacs27
+                (reusable-frames . visible)
+                (window-height . 0.4))))
