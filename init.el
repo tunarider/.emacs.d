@@ -257,6 +257,7 @@ There are two things you can do about this warning:
   (setq x-underline-at-descent-line t)
   (setq centaur-tabs-gray-out-icons 'buffer)
   (setq centaur-tabs-style "wave")
+  (setq centaur-tabs-cycle-scope 'tabs)
   (setq centaur-tabs-set-close-button nil)
   (setq centaur-tabs-set-modified-marker t)
   (setq centaur-tabs-modified-marker "+")
