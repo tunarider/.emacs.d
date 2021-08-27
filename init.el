@@ -530,6 +530,4 @@ There are two things you can do about this warning:
                 (window-height . 0.4))))
 
 (use-package magit
-  :ensure t
-  :bind
-  (:map global-map ("C-c g" . magit)))
+  :ensure t)
