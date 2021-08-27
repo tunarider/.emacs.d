@@ -528,3 +528,8 @@ There are two things you can do about this warning:
                 ;;(dedicated . t) ;dedicated is supported in emacs27
                 (reusable-frames . visible)
                 (window-height . 0.4))))
+
+(use-package magit
+  :ensure t
+  :bind
+  (:map global-map ("C-c g" . magit)))
