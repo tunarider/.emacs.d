@@ -16,14 +16,15 @@ There are two things you can do about this warning:
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" default))
+   '("835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" default))
  '(indent-tabs-mode nil)
  '(lsp-go-env
    #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data ()))
  '(mac-command-modifier 'super)
  '(mac-option-modifier 'meta)
  '(package-selected-packages
-   '(vterm-toggle vterm pinentry golden-ratio virtualenvwrapper flycheck-popup-tip solaire-mode groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(solaire-mode lsp-mode vterm-toggle vterm pinentry golden-ratio virtualenvwrapper flycheck-popup-tip groovy-mode dockerfile-mode terraform-mode diminish jinja2-mode lsp-treemacs helm-lsp lsp-ui lsp-python-ms typescript-mode vue-mode rust-mode go-mode php-mode python-mode yaml-mode mmm-mode treemacs-magit treemacs-projectile treemacs-evil treemacs flymake-diagnostic-at-point company ibuffer-projectile centaur-tabs flycheck rainbow-delimiters highlight-indent-guides helm-projectile projectile popwin multi-term yasnippet smartparens highlight-parentheses nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+ '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -31,7 +32,7 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 110 :width normal))))
+ '(default ((t (:family "MesloLGS NF" :foundry "nil" :slant normal :weight normal :height 100 :width normal))))
  '(flycheck-error ((t (:background "dark red" :underline t))))
  '(rainbow-delimiters-depth-1-face ((t (:foreground "red4" :weight bold))))
  '(rainbow-delimiters-depth-2-face ((t (:foreground "DarkOrange4" :weight bold))))
@@ -483,7 +484,6 @@ There are two things you can do about this warning:
   :hook (change-major-mode . turn-on-solaire-mode)
   :hook (after-revert . turn-on-solaire-mode)
   :hook (ediff-prepare-buffer . solaire-mode)
-  :hook (minibuffer-setup . solaire-mode-in-minibuffer)
   :config
   (setq solaire-mode-auto-swap-bg nil)
   (solaire-global-mode +1))
