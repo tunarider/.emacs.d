@@ -333,6 +333,7 @@
   :ensure t
   :config
   (push '(magit-status-mode :position bottom :height 50) popwin:special-display-config)
+  (push '("^\\*vterm\\*.*" :regexp t :position bottom :height 50) popwin:special-display-config)
   (popwin-mode 1))
 
 (use-package yaml-mode :ensure t)
