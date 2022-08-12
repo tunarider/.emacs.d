@@ -1,4 +1,12 @@
+;;; init.el --- My init.el file
+
+;;; Commentary:
+;;; None
+
 (require 'package)
+
+;;; code:
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
@@ -8,7 +16,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(yaml-mode popwin kubernetes marginalia vertico which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(flycheck-pos-tip yaml-mode popwin kubernetes marginalia vertico which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -59,12 +67,14 @@
 
 (use-package doom-themes
   :ensure t
+  :defines
+  doom-themes-treemacs-theme
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
+  (setq doom-themes-treemacs-theme "doom-atom")
   (load-theme 'doom-nord t)
   (doom-themes-visual-bell-config)
-  (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config))
 
 (use-package doom-modeline
@@ -77,8 +87,9 @@
 (use-package centaur-tabs
   :ensure t
   :demand
+  :init
+  :after projectile
   :config
-  (centaur-tabs-group-by-projectile-project)
   (setq centaur-tabs-height 32)
   (setq centaur-tabs-set-icons t)
   (setq centaur-tabs-gray-out-icons 'buffer)
@@ -105,6 +116,7 @@
 				((projectile-project-p) (projectile-project-name))
 				(t "Common"))))
   (centaur-tabs-mode t)
+  (centaur-tabs-group-by-projectile-project)
   (centaur-tabs-group-buffer-groups)
   :bind
   ("M-s-y" . centaur-tabs-backward)
@@ -115,9 +127,11 @@
 
 (use-package solaire-mode
   :ensure t
-  :hook (change-major-mode . turn-on-solaire-mode)
-  :hook (after-revert . turn-on-solaire-mode)
-  :hook (ediff-prepare-buffer . solaire-mode)
+  :defines
+  solaire-mode-auto-swap-bg
+  :hook ((change-major-mode . turn-on-solaire-mode)
+         (after-revert . turn-on-solaire-mode)
+         (ediff-prepare-buffer . solaire-mode))
   :config
   (setq solaire-mode-auto-swap-bg nil)
   (solaire-global-mode +1))
@@ -132,18 +146,16 @@
   (progn (nyan-mode t)))
 
 (use-package display-line-numbers
-  :hook
-  ((prog-mode . display-line-numbers-mode)
-   (terraform-mode . display-line-numbers-mode)
-   (yaml-mode . display-line-numbers-mode)))
+  :hook ((prog-mode . display-line-numbers-mode)
+         (terraform-mode . display-line-numbers-mode)
+         (yaml-mode . display-line-numbers-mode)))
 
 (use-package highlight-indent-guides
   :ensure t
   :config
   (setq highlight-indent-guides-method 'bitmap)
-  :hook
-  ((prog-mode . highlight-indent-guides-mode)
-   (yaml-mode . highlight-indent-guides-mode)))
+  :hook ((prog-mode . highlight-indent-guides-mode)
+         (yaml-mode . highlight-indent-guides-mode)))
 
 (use-package projectile
   :ensure t
@@ -209,6 +221,8 @@
   ((:map global-map
          ("C-c v t" . vterm-toggle)
          ("C-c v e" . vterm-toggle-cd)))
+  :defines
+  vterm-toggle--vterm-buffer-p-function
   :config
   (setq vterm-toggle--vterm-buffer-p-function 'vmacs-term-mode-p)
   (setq vterm-toggle-fullscreen-p nil)
@@ -227,8 +241,13 @@
 
 (use-package flycheck
   :ensure t
-  :hook
-  ((emacs-lisp-mode . flycheck-mode)))
+  :hook ((emacs-lisp-mode . flycheck-mode)))
+
+(use-package flycheck-pos-tip
+  :ensure t
+  :after flycheck
+  :config
+  (flycheck-pos-tip-mode))
 
 (use-package company
   :ensure t
@@ -243,6 +262,8 @@
   :hook ((terraform-mode . lsp-deferred)
          (go-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
+  :defines
+  lsp-terraform-ls-enable-show-reference
   :config
   (setq lsp-terraform-ls-enable-show-reference t)
   (setq lsp-enable-links t)
@@ -251,13 +272,14 @@
 
 (use-package lsp-ui
   :ensure t
-  :commands lsp-ui-mode
+  :commands lsp-ui-peek
   :defines
   lsp-ui-peek-always-show
   :config
   (setq lsp-ui-peek-always-show t)
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+  :bind
+  ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+  ([remap xref-find-references] . lsp-ui-peek-find-references))
 
 (use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
 
@@ -269,8 +291,7 @@
 
 (use-package terraform-mode
   :ensure t
-  :hook
-  ((terraform-mode . terraform-format-on-save-mode))
+  :hook ((terraform-mode . terraform-format-on-save-mode))
   :config
   (setq create-lockfiles nil))
 
@@ -312,21 +333,6 @@
   :init
   (savehist-mode))
 
-(use-package emacs
-  :init
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  (setq enable-recursive-minibuffers t))
-
 (use-package kubernetes :ensure t :commands (kubernetes-overview))
 
 (use-package popwin
@@ -337,3 +343,7 @@
   (popwin-mode 1))
 
 (use-package yaml-mode :ensure t)
+
+(provide 'init)
+
+;;; init.el ends here
