@@ -8,7 +8,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(marginalia vertico which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(yaml-mode popwin kubernetes marginalia vertico which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -24,6 +24,8 @@
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
+(setq column-number-mode t)
+(setq size-indication-mode t)
 
 (set-default 'indent-tabs-mode nil)
 (set-default 'tab-width 4)
@@ -39,6 +41,7 @@
 
 (setenv "GOPATH" (concat (getenv "HOME") "/.go"))
 (setenv "PATH" (concat
+                "/opt/homebrew/bin:"
                 "/usr/local/bin:"
                 (getenv "GOPATH") "/bin:"
                 (getenv "PATH")))
@@ -65,7 +68,12 @@
   (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config))
 
-(use-package doom-modeline :ensure t :init (doom-modeline-mode 1))
+(use-package doom-modeline
+  :ensure t
+  :init
+  (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-buffer-file-name-style 'truncate-nil))
 
 (use-package centaur-tabs
   :ensure t
@@ -84,6 +92,7 @@
   (defun centaur-tabs-buffer-groups ()
 	(list (cond ((derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode)
 				 "Term")
+                ((string-match-p "\*kubernetes" (buffer-name)) "Kubernetes")
 				((string-match-p (rx (or
                                       "\*Helm"
                                       "\*helm"
@@ -91,12 +100,11 @@
                                       "\*Completions\*"
                                       "\*sdcv\*"
                                       "\*Messages\*"
-                                      "\*Ido Completions\*")) (buffer-name))
-				 "Emacs")
-				((projectile-project-p)
-				 (projectile-project-name))
+                                      "\*Ido Completions\*")) (buffer-name)) "Emacs")
+				((projectile-project-p) (projectile-project-name))
 				(t "Common"))))
   (centaur-tabs-mode t)
+  (centaur-tabs-group-buffer-groups)
   :bind
   ("M-s-y" . centaur-tabs-backward)
   ("M-s-o" . centaur-tabs-forward)
@@ -112,7 +120,7 @@
   (setq solaire-mode-auto-swap-bg nil)
   (solaire-global-mode +1))
 
-(use-package golden-ratio :ensure t :config (golden-ratio-mode 1))
+;; (use-package golden-ratio :ensure t :config (golden-ratio-mode 1))
 
 (use-package nyan-mode
   :ensure t
@@ -155,12 +163,6 @@
 		'("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "term-mode" "popwin-mode"))
 	 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 	 (projectile-mode t)))
-
-(use-package helm-projectile
-  :ensure t
-  :after helm projectile
-  :config
-  (helm-projectile-on))
 
 (use-package ibuffer :ensure t)
 
@@ -303,6 +305,12 @@
   (setq vertico-count 20)
   (setq vertico-cycle t))
 
+(use-package helm-projectile
+  :ensure t
+  :after projectile
+  :config
+  (helm-projectile-on))
+
 (use-package savehist
   :init
   (savehist-mode))
@@ -320,6 +328,21 @@
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  (setq read-extended-command-predicate
-        #'command-completion-default-include-p)
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
   (setq enable-recursive-minibuffers t))
+
+(use-package kubernetes
+  :ensure t
+  :commands (kubernetes-overview)
+  :config)
+  ;; (setq kubernetes-poll-frequency 30
+        ;; kubernetes-redraw-frequency 60))
+
+(use-package popwin
+  :ensure t
+  :config
+  (push '(magit-status-mode :position bottom :height 50) popwin:special-display-config)
+  (popwin-mode 1))
+
+(use-package yaml-mode :ensure t)
