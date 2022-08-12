@@ -91,6 +91,7 @@
   (defun centaur-tabs-buffer-groups ()
 	(list (cond ((derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode)
 				 "Term")
+                ((derived-mode-p 'magit-mode) (concat "magit:" (magit-toplevel)))
                 ((string-match-p "\*kubernetes" (buffer-name)) "Kubernetes")
 				((string-match-p (rx (or
                                       "\*Helm"
@@ -99,6 +100,7 @@
                                       "\*Completions\*"
                                       "\*sdcv\*"
                                       "\*Messages\*"
+                                      "\*Ibuffer\*"
                                       "\*Ido Completions\*")) (buffer-name)) "Emacs")
 				((projectile-project-p) (projectile-project-name))
 				(t "Common"))))
@@ -108,7 +110,8 @@
   ("M-s-y" . centaur-tabs-backward)
   ("M-s-o" . centaur-tabs-forward)
   ("M-s-i" . centaur-tabs-backward-group)
-  ("M-s-u" . centaur-tabs-forward-group))
+  ("M-s-u" . centaur-tabs-forward-group)
+  ("M-s-g" . centaur-tabs-toggle-groups))
 
 (use-package solaire-mode
   :ensure t
