@@ -39,12 +39,11 @@
 (global-set-key (kbd "C-'") 'xref-find-definitions)
 (global-set-key (kbd "C-\"") 'xref-find-references)
 
-(setenv "GOPATH" (concat (getenv "HOME") "/.go"))
-(setenv "PATH" (concat
-                "/opt/homebrew/bin:"
-                "/usr/local/bin:"
-                (getenv "GOPATH") "/bin:"
-                (getenv "PATH")))
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize)))
 
 (use-package evil
   :ensure t
@@ -61,8 +60,8 @@
 (use-package doom-themes
   :ensure t
   :config
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (setq doom-themes-enable-bold t)
+  (setq doom-themes-enable-italic t)
   (load-theme 'doom-nord t)
   (doom-themes-visual-bell-config)
   (setq doom-themes-treemacs-theme "doom-atom")
@@ -119,8 +118,6 @@
   :config
   (setq solaire-mode-auto-swap-bg nil)
   (solaire-global-mode +1))
-
-;; (use-package golden-ratio :ensure t :config (golden-ratio-mode 1))
 
 (use-package nyan-mode
   :ensure t
@@ -245,10 +242,7 @@
          (lsp-mode . lsp-enable-which-key-integration))
   :config
   (setq lsp-terraform-ls-enable-show-reference t)
-  (setq lsp-semantic-tokens-enable t)
-  (setq lsp-semantic-tokens-honor-refresh-requests t)
   (setq lsp-enable-links t)
-  (setq lsp-go-gopls-server-path (concat (getenv "GOPATH") "/bin/gopls"))
   (setq lsp-disabled-clients '(tfls))
   :commands lsp)
 
@@ -328,16 +322,9 @@
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
   (setq enable-recursive-minibuffers t))
 
-(use-package kubernetes
-  :ensure t
-  :commands (kubernetes-overview)
-  :config)
-  ;; (setq kubernetes-poll-frequency 30
-        ;; kubernetes-redraw-frequency 60))
+(use-package kubernetes :ensure t :commands (kubernetes-overview))
 
 (use-package popwin
   :ensure t
