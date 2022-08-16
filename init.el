@@ -320,16 +320,13 @@
   :init
   (vertico-mode)
   (setq vertico-count 20)
-  (setq completion-styles '(basic))
-  (define-key vertico-map " " #'minibuffer-complete-word)
-  :bind
-  (:map vertico-map
-        ("?" . minibuffer-completion-help)
-        ("RET" . minibuffer-force-complete-and-exit)
-        ("TAB" . minibuffer-complete)))
+  (setq vertico-cycle t))
 
-(setq completion-styles '(partial-completion substring basic))
-
+(use-package orderless
+  :ensure t
+  :init
+  (setq completion-styles '(basic substring partial-completion flex)
+        completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package helm-projectile
   :ensure t
