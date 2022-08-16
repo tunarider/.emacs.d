@@ -349,6 +349,8 @@
 
 (use-package yaml-mode :ensure t)
 
+(load-file "~/.emacs.d/local.el")
+
 (provide 'init)
 
 ;;; init.el ends here

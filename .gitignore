@@ -11,3 +11,4 @@ eshell/
 .DS_Store
 history
 .dap-breakpoints
+local.el
