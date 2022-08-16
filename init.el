@@ -73,6 +73,7 @@
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
   (setq doom-themes-treemacs-theme "doom-atom")
+  (setq doom-modeline-minor-modes t)
   (load-theme 'doom-nord t)
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config))
@@ -240,6 +241,7 @@
 
 (use-package flycheck
   :ensure t
+  :diminish flycheck-mode
   :hook ((emacs-lisp-mode . flycheck-mode)))
 
 (use-package flycheck-pos-tip
@@ -250,6 +252,7 @@
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :config
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.3)
@@ -297,19 +300,9 @@
 (use-package pinentry
   :ensure t)
 
-(use-package diminish
-  :ensure t
-  :config
-  (diminish 'abbrev-mode)
-  (diminish 'yas-minor-mode)
-  (diminish 'highlight-indent-guides-mode)
-  (diminish 'smartparens-mode)
-  (diminish 'highlight-parentheses-mode)
-  (diminish 'undo-tree-mode)
-  (diminish 'eldoc-mode))
-
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config
   (which-key-mode))
 
@@ -348,6 +341,15 @@
   (popwin-mode 1))
 
 (use-package yaml-mode :ensure t)
+
+(use-package highlight-indent-guides
+  :diminish highlight-indent-guides-mode)
+
+(use-package autorevert
+  :diminish auto-revert-mode)
+
+(use-package eldoc
+  :diminish eldoc-mode)
 
 (load-file "~/.emacs.d/local.el")
 

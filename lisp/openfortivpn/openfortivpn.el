@@ -5,6 +5,11 @@
 
 ;;; code:
 
+(define-minor-mode openfortivpn-global-mode
+  "Openfortivpn mode."
+  :global t
+  :lighter (:eval (openfortivpn-lightuer)))
+
 (defvar openfortivpn-path "openfortivpn"
   "Path of openfortivpn.")
 
@@ -16,6 +21,12 @@
 
 (defvar openfortivpn-server-alist nil
   "Alist of FortiVPN servers.")
+
+(defvar openfortivpn-current-server-id nil
+  "Current server ID.")
+
+(defun openfortivpn-lightuer ()
+  (concat " FortiVPN: " openfortivpn-current-server-id))
 
 (defun openfortivpn-get-server (srv-id)
   "Get server(SRV-ID) from list."
@@ -43,7 +54,9 @@
                        "--password" password)
                  (apply #'append (mapcar #'(lambda (c) (append '("--trusted-cert") (list c))) openfortivpn-trusted-certs))
                  openfortivpn-args))))
-    (openfortivpn-send-sudo-password proc)))
+    (openfortivpn-send-sudo-password proc)
+    (setq openfortivpn-current-server-id srv-id)
+    (openfortivpn-global-mode t)))
   
 (defun openfortivpn-connect ()
   (interactive)
@@ -55,7 +68,9 @@
   (interactive (list (read-passwd "Sudo: ")))
   (let* ((pid (process-id (get-process "openfortivpn")))
          (proc (start-process "kill-openfortivpn" nil "sudo" "kill" (number-to-string pid))))
-    (openfortivpn-send-sudo-password proc)))
+    (openfortivpn-send-sudo-password proc)
+    (setq openfortivpn-current-server-id nil)
+    (openfortivpn-global-mode -1)))
 
 (defun openfortivpn-disconnect ()
   (interactive)
