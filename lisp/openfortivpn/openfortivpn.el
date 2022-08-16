@@ -26,7 +26,7 @@
   "Current server ID.")
 
 (defun openfortivpn-lightuer ()
-  (concat " FortiVPN: " openfortivpn-current-server-id))
+  (concat " FortiVPN[" openfortivpn-current-server-id "]"))
 
 (defun openfortivpn-get-server (srv-id)
   "Get server(SRV-ID) from list."
