@@ -3,9 +3,9 @@
 ;;; Commentary:
 ;;; None
 
-(require 'package)
-
 ;;; code:
+
+(require 'package)
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
@@ -16,7 +16,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(flycheck-pos-tip yaml-mode popwin kubernetes marginalia vertico which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -100,8 +100,7 @@
   (setq centaur-tabs-set-modified-marker t)
   (setq centaur-tabs-modified-marker "+")
   (defun centaur-tabs-buffer-groups ()
-	(list (cond ((derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode)
-				 "Term")
+	(list (cond ((derived-mode-p 'eshell-mode 'term-mode 'shell-mode 'vterm-mode) "Term")
                 ((derived-mode-p 'magit-mode) (concat "magit:" (magit-toplevel)))
                 ((string-match-p "\*kubernetes" (buffer-name)) "Kubernetes")
 				((string-match-p (rx (or
@@ -321,7 +320,16 @@
   :init
   (vertico-mode)
   (setq vertico-count 20)
-  (setq vertico-cycle t))
+  (setq completion-styles '(basic))
+  (define-key vertico-map " " #'minibuffer-complete-word)
+  :bind
+  (:map vertico-map
+        ("?" . minibuffer-completion-help)
+        ("RET" . minibuffer-force-complete-and-exit)
+        ("TAB" . minibuffer-complete)))
+
+(setq completion-styles '(partial-completion substring basic))
+
 
 (use-package helm-projectile
   :ensure t
