@@ -16,7 +16,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -105,6 +105,7 @@
                 ((derived-mode-p 'magit-mode) (concat "magit:" (magit-toplevel)))
                 ((string-match-p "\*kubernetes" (buffer-name)) "Kubernetes")
 				((string-match-p (rx (or
+                                      "\*openfortivpn"
                                       "\*Helm"
                                       "\*helm"
                                       "\*tramp"
