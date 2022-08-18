@@ -76,6 +76,13 @@
       (call-interactively 'openfortivpn-kill-process)
     (message "FortiVPN is not connected")))
 
+(defun openfortivpn-reconnect ()
+  (interactive)
+  (openfortivpn-disconnect)
+  (cl-loop until (not (openfortivpn-connect-p))
+           do (sleep-for 1))
+  (openfortivpn-connect))
+
 (defun openfortivpn--key (key)
   (kbd (concat openfortivpn-keymap-prefix " " key)))
 
@@ -85,7 +92,8 @@
   :group 'openfortivpn
   :keymap
   (list (cons (openfortivpn--key "c") #'openfortivpn-connect)
-        (cons (openfortivpn--key "d") #'openfortivpn-disconnect))
+        (cons (openfortivpn--key "d") #'openfortivpn-disconnect)
+        (cons (openfortivpn--key "r") #'openfortivpn-reconnect))
   :lighter (:eval (openfortivpn-lightuer)))
 
 (provide 'openfortivpn)
