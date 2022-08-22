@@ -221,7 +221,7 @@
   :bind
   ((:map global-map
          ("C-c v t" . vterm-toggle)
-         ("C-c v e" . vterm-toggle-cd)))
+         ("C-c v e" . vterm-toggle-insert-cd)))
   :defines
   vterm-toggle--vterm-buffer-p-function
   :config
@@ -262,9 +262,7 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
-  :hook ((terraform-mode . lsp-deferred)
-         (go-mode . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration))
+  :hook (lsp-mode . lsp-enable-which-key-integration)
   :defines
   lsp-terraform-ls-enable-show-reference
   :config
