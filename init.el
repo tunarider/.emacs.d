@@ -23,7 +23,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "MesloLGS NF" :foundry "nil" :slant normal :weight normal :height 100 :width normal)))))
+ '(default ((t (:family "MesloLGS NF" :foundry "nil" :slant normal :weight normal :height 110 :width normal)))))
 
 (unless package-archive-contents (package-refresh-contents))
 (unless (package-installed-p 'use-package) (package-install 'use-package))
@@ -194,6 +194,8 @@
 (use-package treemacs
   :ensure t
   :defer t
+  :config
+  (setq treemacs-width 40)
   :bind
   (:map global-map
         ("M-0"       . treemacs-select-window)
