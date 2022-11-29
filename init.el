@@ -16,7 +16,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(lsp-bash dockerfile-mode lsp-java ansible openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -113,7 +113,9 @@
                                       "\*sdcv\*"
                                       "\*Messages\*"
                                       "\*Ibuffer\*"
-                                      "\*Ido Completions\*")) (buffer-name)) "Emacs")
+                                      "\*Ido Completions\*"
+                                      "\*dockerfile-ls\*"
+                                      "\*dockerfile-ls::stderr\*")) (buffer-name)) "Emacs")
 				((projectile-project-p) (projectile-project-name))
 				(t "Common"))))
   (centaur-tabs-mode t)
@@ -264,7 +266,8 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
-  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :hook ((lsp-mode . lsp-enable-which-key-integration)
+         (sh-mode . lsp))
   :defines
   lsp-terraform-ls-enable-show-reference
   :config
@@ -287,6 +290,16 @@
 (use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
 
 (use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+
+(use-package lsp-java
+  :ensure t
+  :config (add-hook 'java-mode-hook 'lsp))
+
+(use-package lsp-docker
+  :ensure t
+  :config (add-hook 'dockerfile-mode-hook 'lsp))
+
+(use-package dockerfile-mode :ensure t)
 
 (use-package dap-mode :ensure t)
 
