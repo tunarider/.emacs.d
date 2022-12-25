@@ -151,6 +151,7 @@
 (use-package display-line-numbers
   :hook ((prog-mode . display-line-numbers-mode)
          (terraform-mode . display-line-numbers-mode)
+         (markdown-mode . display-line-numbers-mode)
          (yaml-mode . display-line-numbers-mode)))
 
 (use-package highlight-indent-guides
