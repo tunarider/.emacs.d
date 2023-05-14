@@ -16,7 +16,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(lsp-bash dockerfile-mode lsp-java ansible openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(geiser-guile php-mode lsp-bash dockerfile-mode lsp-java ansible openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -46,6 +46,14 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-'") 'xref-find-definitions)
 (global-set-key (kbd "C-\"") 'xref-find-references)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+(use-package helm
+  :ensure t
+  :config
+  (setq helm-M-x-show-short-doc t))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -268,13 +276,15 @@
   :init
   (setq lsp-keymap-prefix "C-c l")
   :hook ((lsp-mode . lsp-enable-which-key-integration)
-         (sh-mode . lsp))
+         (sh-mode . lsp)
+         (php-mode . lsp))
   :defines
   lsp-terraform-ls-enable-show-reference
   :config
   (setq lsp-terraform-ls-enable-show-reference t)
   (setq lsp-enable-links t)
   (setq lsp-disabled-clients '(tfls))
+  (setq lsp-intelephense-php-version "8.1.0")
   :commands lsp)
 
 (use-package lsp-ui
@@ -315,26 +325,29 @@
 (use-package pinentry
   :ensure t)
 
-(use-package which-key
-  :ensure t
-  :diminish which-key-mode
-  :config
-  (which-key-mode))
+;; (use-package which-key
+;;   :ensure t
+;;   :diminish which-key-mode
+;;   :config
+;;   (which-key-mode))
 
-(use-package marginalia :ensure t :init (marginalia-mode))
+;; (use-package marginalia :ensure t :init (marginalia-mode))
 
-(use-package vertico
-  :ensure t
-  :init
-  (vertico-mode)
-  (setq vertico-count 20)
-  (setq vertico-cycle t))
+;; (use-package vertico
+;;   :ensure t
+;;   :init
+;;   (vertico-mode)
+;;   (setq vertico-count 20)
+;;   (setq vertico-cycle t)
+;;   :bind (:map vertico-map
+;;               ("TAB" . vertico-next)))
 
-(use-package orderless
-  :ensure t
-  :init
-  (setq completion-styles '(basic substring partial-completion flex)
-        completion-category-overrides '((file (styles partial-completion)))))
+;; (use-package orderless
+;;   :ensure t
+;;   :init
+;;   ;; (setq completion-styles '(basic substring partial-completion flex)
+;;   (setq completion-styles '(flex)
+;;         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package helm-projectile
   :ensure t
@@ -365,6 +378,8 @@
 
 (use-package eldoc
   :diminish eldoc-mode)
+
+(add-to-list 'auto-mode-alist '("\\.write\\'" . write-mode))
 
 (load-file "~/.emacs.d/local.el")
 
