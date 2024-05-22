@@ -16,7 +16,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(geiser-guile php-mode lsp-bash dockerfile-mode lsp-java ansible openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(yasnippet geiser-guile php-mode lsp-bash dockerfile-mode lsp-java ansible openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -71,7 +71,9 @@
   :config
   (evil-mode))
 
-(use-package all-the-icons :ensure t)
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
 
 (use-package doom-themes
   :ensure t
@@ -324,30 +326,6 @@
 
 (use-package pinentry
   :ensure t)
-
-;; (use-package which-key
-;;   :ensure t
-;;   :diminish which-key-mode
-;;   :config
-;;   (which-key-mode))
-
-;; (use-package marginalia :ensure t :init (marginalia-mode))
-
-;; (use-package vertico
-;;   :ensure t
-;;   :init
-;;   (vertico-mode)
-;;   (setq vertico-count 20)
-;;   (setq vertico-cycle t)
-;;   :bind (:map vertico-map
-;;               ("TAB" . vertico-next)))
-
-;; (use-package orderless
-;;   :ensure t
-;;   :init
-;;   ;; (setq completion-styles '(basic substring partial-completion flex)
-;;   (setq completion-styles '(flex)
-;;         completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package helm-projectile
   :ensure t
