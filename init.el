@@ -15,19 +15,35 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
  '(package-selected-packages
-   '(yasnippet geiser-guile php-mode lsp-bash dockerfile-mode lsp-java ansible openfortivpn flycheck-pos-tip yaml-mode popwin kubernetes marginalia which-key flycheck go-mode company terraform-mode dap-mode lsp-treemacs helm-lsp lsp-ui golden-ratio solaire-mode diminish vterm-toggle vterm pinentry treemacs-magit treemacs-projectile treemacs-evil treemacs ibuffer-projectile centaur-tabs highlight-indent-guides helm-projectile projectile nyan-mode doom-modeline doom-themes all-the-icons evil use-package))
+   '(treemacs-nerd-icons treemacs-all-the-icons popwin go-mode yaml-mode all-the-icons lsp-java helm-lsp lsp-ui dap-mode yasnippet which-key pinentry company flycheck-pos-tip flycheck vterm-toggle vterm treemacs-magit treemacs-projectile treemacs-evil treemacs helm-projectile ibuffer-projectile projectile highlight-indent-guides nyan-mode solaire-mode centaur-tabs doom-modeline exec-path-from-shell))
+ '(size-indication-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "MesloLGS NF" :foundry "nil" :slant normal :weight normal :height 110 :width normal)))))
+ '(default ((t (:family "D2Coding" :foundry "nil" :slant normal :weight medium :height 130 :width normal)))))
+ ;; '(default ((t (:family "Menlo" :foundry "nil" :slant normal :weight medium :height 130 :width normal)))))
+;; |---------------|
+;; | 테스트 테스트 |
+;; | test          |
 
 (unless package-archive-contents (package-refresh-contents))
-(unless (package-installed-p 'use-package) (package-install 'use-package))
+;; (unless (package-installed-p 'use-package) (package-install 'use-package))
 
+(condition-case nil
+    (require 'use-package)
+  (file-error
+   (require 'package)
+   (package-refresh-contents)
+   (package-install 'use-package)
+   (setq use-package-always-ensure t)
+   (require 'use-package)))
+
+(setq use-package-always-ensure t)
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 (setq mac-command-modifier 'meta)
@@ -46,23 +62,13 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-'") 'xref-find-definitions)
 (global-set-key (kbd "C-\"") 'xref-find-references)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-
-(use-package helm
-  :ensure t
-  :config
-  (setq helm-M-x-show-short-doc t))
 
 (use-package exec-path-from-shell
-  :ensure t
   :config
   (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize)))
 
 (use-package evil
-  :ensure t
   :init
   (setq evil-want-fine-undo t)
   (defun my-advice-evil-delete-char (orig-fn beg end &optional type _ &rest args)
@@ -71,32 +77,52 @@
   :config
   (evil-mode))
 
-(use-package all-the-icons
-  :ensure t
-  :if (display-graphic-p))
+(use-package all-the-icons)
+
+(use-package treemacs
+  :defer t
+  :config
+  (setq treemacs-width 40)
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t d"   . treemacs-select-directory)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil :after (treemacs evil))
+
+(use-package treemacs-projectile :after (treemacs projectile))
+
+(use-package treemacs-magit :after (treemacs magit))
 
 (use-package doom-themes
-  :ensure t
   :defines
   doom-themes-treemacs-theme
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
-  (setq doom-themes-treemacs-theme "doom-atom")
+  ;; (setq doom-themes-treemacs-theme "doom-colors")
   (setq doom-modeline-minor-modes t)
   (load-theme 'doom-nord t)
   (doom-themes-visual-bell-config)
-  (doom-themes-treemacs-config))
+  ;; https://github.com/emacs-lsp/lsp-treemacs/issues/89
+  ;; (treemacs-load-all-the-icons-with-workaround-font "Hermit")
+  (with-eval-after-load 'lsp-treemacs
+    (treemacs-load-all-the-icons-with-workaround-font "Menlo")
+    ;; (doom-themes-treemacs-config)
+    ))
 
 (use-package doom-modeline
-  :ensure t
   :init
   (doom-modeline-mode 1)
   :config
   (setq doom-modeline-buffer-file-name-style 'truncate-nil))
 
 (use-package centaur-tabs
-  :ensure t
   :demand
   :init
   :after projectile
@@ -139,7 +165,6 @@
   ("M-s-g" . centaur-tabs-toggle-groups))
 
 (use-package solaire-mode
-  :ensure t
   :defines
   solaire-mode-auto-swap-bg
   :hook ((change-major-mode . turn-on-solaire-mode)
@@ -150,7 +175,6 @@
   (solaire-global-mode +1))
 
 (use-package nyan-mode
-  :ensure t
   :init
   (setq nyan-animate-nyancat t)
   (setq nyan-wavy-trail t)
@@ -161,18 +185,15 @@
 (use-package display-line-numbers
   :hook ((prog-mode . display-line-numbers-mode)
          (terraform-mode . display-line-numbers-mode)
-         (markdown-mode . display-line-numbers-mode)
          (yaml-mode . display-line-numbers-mode)))
 
 (use-package highlight-indent-guides
-  :ensure t
   :config
   (setq highlight-indent-guides-method 'bitmap)
   :hook ((prog-mode . highlight-indent-guides-mode)
          (yaml-mode . highlight-indent-guides-mode)))
 
 (use-package projectile
-  :ensure t
   :init
   (defadvice projectile-on (around exlude-tramp activate)
     (unless  (--any? (and it (file-remote-p it))
@@ -190,10 +211,18 @@
 	 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 	 (projectile-mode t)))
 
-(use-package ibuffer :ensure t)
+(use-package helm-projectile
+  :after projectile
+  :config
+  (helm-projectile-on))
+
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package ibuffer)
 
 (use-package ibuffer-projectile
-  :ensure t
   :after projectile ibuffer
   :functions
   ibuffer-do-sort-by-alphabetic
@@ -204,35 +233,19 @@
       (unless (eq ibuffer-sorting-mode 'alphabetic)
         (ibuffer-do-sort-by-alphabetic)))))
 
-(use-package treemacs
+(use-package popwin
   :ensure t
-  :defer t
   :config
-  (setq treemacs-width 40)
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t d"   . treemacs-select-directory)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
-(use-package treemacs-evil :after (treemacs evil) :ensure t)
-
-(use-package treemacs-projectile :after (treemacs projectile) :ensure t)
-
-(use-package treemacs-magit :after (treemacs magit) :ensure t)
+  (push '(magit-status-mode :position bottom :height 50) popwin:special-display-config)
+  (push '("^\\*vterm\\*.*" :regexp t :position bottom :height 50) popwin:special-display-config)
+  (popwin-mode 1))
 
 (use-package vterm
-  :ensure t
   :bind (:map vterm-mode-map ("C-c C-y" . vterm-yank))
   :config
   (setq vterm-max-scrollback 100000))
 
 (use-package vterm-toggle
-  :ensure t
   :bind
   ((:map global-map
          ("C-c v t" . vterm-toggle)
@@ -253,111 +266,62 @@
                 (reusable-frames . visible)
                 (window-height . 0.4))))
 
-(use-package magit :ensure t)
+(use-package magit)
 
 (use-package flycheck
-  :ensure t
-  :diminish flycheck-mode
-  :hook ((emacs-lisp-mode . flycheck-mode)))
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 (use-package flycheck-pos-tip
-  :ensure t
   :after flycheck
   :config
   (flycheck-pos-tip-mode))
 
 (use-package company
-  :ensure t
   :diminish company-mode
   :config
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.3)
   (global-company-mode))
 
+(use-package pinentry)
+
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (which-key-mode))
+
+(use-package yasnippet :config (yas-global-mode))
+
+(use-package dap-mode)
+
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l")
-  :hook ((lsp-mode . lsp-enable-which-key-integration)
-         (sh-mode . lsp)
-         (php-mode . lsp))
-  :defines
-  lsp-terraform-ls-enable-show-reference
-  :config
-  (setq lsp-terraform-ls-enable-show-reference t)
-  (setq lsp-enable-links t)
-  (setq lsp-disabled-clients '(tfls))
-  (setq lsp-intelephense-php-version "8.1.0")
+  :hook ((go-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
 (use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-peek
-  :defines
-  lsp-ui-peek-always-show
-  :config
-  (setq lsp-ui-peek-always-show t)
+  :commands lsp-ui-mode
   :bind
   ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
   ([remap xref-find-references] . lsp-ui-peek-find-references))
 
-(use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
+(use-package helm-lsp :commands helm-lsp-workspace-symbol)
 
-(use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
 (use-package lsp-java
-  :ensure t
-  :config (add-hook 'java-mode-hook 'lsp))
-
-(use-package lsp-docker
-  :ensure t
-  :config (add-hook 'dockerfile-mode-hook 'lsp))
-
-(use-package dockerfile-mode :ensure t)
-
-(use-package dap-mode :ensure t)
-
-(use-package go-mode :ensure t)
-
-(use-package terraform-mode
-  :ensure t
-  :hook ((terraform-mode . terraform-format-on-save-mode))
   :config
-  (setq create-lockfiles nil))
+  (add-hook 'java-mode-hook 'lsp)
+  (setq lsp-java-vmargs '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/Users/user/.emacs.d/extra/lombok.jar" "-Xbootclasspath/a:/Users/user/.emacs.d/extra/lombok.jar"))
+  (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/openjdk-21.jdk/Contents/Home/bin/java")
+  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.39.0/jdt-language-server-1.39.0-202408291433.tar.gz"))
 
-(use-package pinentry
-  :ensure t)
+(use-package yaml-mode)
 
-(use-package helm-projectile
-  :ensure t
-  :after projectile
-  :config
-  (helm-projectile-on))
-
-(use-package savehist
-  :init
-  (savehist-mode))
-
-(use-package kubernetes :ensure t :commands (kubernetes-overview))
-
-(use-package popwin
-  :ensure t
-  :config
-  (push '(magit-status-mode :position bottom :height 50) popwin:special-display-config)
-  (push '("^\\*vterm\\*.*" :regexp t :position bottom :height 50) popwin:special-display-config)
-  (popwin-mode 1))
-
-(use-package yaml-mode :ensure t)
-
-(use-package highlight-indent-guides
-  :diminish highlight-indent-guides-mode)
-
-(use-package autorevert
-  :diminish auto-revert-mode)
-
-(use-package eldoc
-  :diminish eldoc-mode)
-
-(add-to-list 'auto-mode-alist '("\\.write\\'" . write-mode))
+(use-package go-mode)
 
 (load-file "~/.emacs.d/local.el")
 
