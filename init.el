@@ -300,6 +300,10 @@
   (setq lsp-keymap-prefix "C-c l")
   :hook ((go-mode . lsp)
          (typescript-mode . lsp)
+         (typescript-ts-mode . lsp)
+         (prisma-ts-mode . lsp)
+         (json-ts-mode . lsp)
+         (tsx-ts-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
