@@ -17,7 +17,15 @@
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(package-selected-packages
-   '(tree-sitter treesit php-mode typescript-mode treemacs-nerd-icons treemacs-all-the-icons popwin go-mode yaml-mode all-the-icons lsp-java helm-lsp lsp-ui dap-mode yasnippet which-key pinentry company flycheck-pos-tip flycheck vterm-toggle vterm treemacs-magit treemacs-projectile treemacs-evil treemacs helm-projectile ibuffer-projectile projectile highlight-indent-guides nyan-mode solaire-mode centaur-tabs doom-modeline exec-path-from-shell))
+   '(tree-sitter treesit php-mode typescript-mode treemacs-nerd-icons
+                 treemacs-all-the-icons popwin go-mode yaml-mode
+                 all-the-icons lsp-java helm-lsp lsp-ui dap-mode
+                 yasnippet which-key pinentry company flycheck-pos-tip
+                 flycheck vterm-toggle vterm treemacs-magit
+                 treemacs-projectile treemacs-evil treemacs
+                 helm-projectile ibuffer-projectile projectile
+                 highlight-indent-guides nyan-mode solaire-mode
+                 centaur-tabs doom-modeline exec-path-from-shell))
  '(size-indication-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -25,7 +33,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "D2Coding" :foundry "nil" :slant normal :weight medium :height 130 :width normal)))))
+ '(default ((t (:family "D2Coding" :foundry "nil" :slant normal :weight regular :height 130 :width normal)))))
  ;; '(default ((t (:family "Menlo" :foundry "nil" :slant normal :weight medium :height 130 :width normal)))))
 ;; |---------------|
 ;; | 테스트 테스트 |
@@ -54,6 +62,9 @@
 (set-default 'indent-tabs-mode nil)
 (set-default 'tab-width 4)
 (set-default 'truncate-lines t)
+
+(set-frame-parameter nil 'ns-appearance 'dark)
+(set-frame-parameter nil 'ns-transparent-titlebar nil)
 
 (global-set-key (kbd "M-s-h") 'windmove-left)
 (global-set-key (kbd "M-s-l") 'windmove-right)
